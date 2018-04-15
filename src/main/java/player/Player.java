@@ -1,7 +1,12 @@
+package player;
+
+import damage.Attack;
+
 import java.util.HashSet;
 import java.util.Set;
 
-public class Player {
+
+public class Player implements Attackable {
 
     private int health = 1000;
     private boolean alive = true;
@@ -11,13 +16,25 @@ public class Player {
     private static int baseHeal = 50;
     private int baseDamage = 50;
 
+    protected int range;
+
+
+    public void setHealth(int health) {
+        if ((this.health += health) > 1000) {
+            this.health = 1000;
+        }
+    }
 
     public int getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public void receiveDamage(int damage) {
+        if (isDamageHigherThanHealth(damage)){this.health=0;}
+    }
+
+    private boolean isDamageHigherThanHealth(int damage) {
+        return (this.health -= damage) < 0;
     }
 
     public void setAlive(boolean alive) {
@@ -36,9 +53,10 @@ public class Player {
         return health > 0 ? alive : false;
     }
 
-    public void dealDamage(Player player) {
+    @Override
+    public void dealDamage(Attack attack, Player player) {
         if (player != this) {
-            player.setHealth(doDamage(player));
+            attack.execute(player);
         }
     }
 
@@ -66,15 +84,22 @@ public class Player {
     }
 
 
-    public void heal(Player player) {
-        if (player.isAlive() && !enemies.contains(player)) {
-            player.setHealth(player.getHealth() + baseHeal);
+    public void heal(int healthPoints, Player player) {
+        if (isAliveAndNotEnemy(player)) {
+            player.setHealth(healthPoints);
         }
     }
 
-    public void addEnemies(Player player2) {
-        enemies.add(player2);
+    private boolean isAliveAndNotEnemy(Player player) {
+        return player.isAlive() && !enemies.contains(player);
+    }
+
+    public void addEnemies(Player enemy) {
+        enemies.add(enemy);
     }
 
 
+    public int getRange() {
+        return this.range;
+    }
 }
