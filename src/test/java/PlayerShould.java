@@ -1,3 +1,8 @@
+import damage.Attack;
+import damage.BoostDamage;
+import damage.Damage;
+import damage.ReduceDamage;
+import player.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -10,7 +15,7 @@ public class PlayerShould {
         //Given
         Player player = new Player();
         //When
-        player.setHealth(0);
+        player.receiveDamage(1000);
         //Then
         assertFalse(player.isAlive());
 
@@ -20,6 +25,7 @@ public class PlayerShould {
     public void beAlive() {
         //Given
         Player player = new Player();
+
         //Then
         assertTrue(player.isAlive());
     }
@@ -49,7 +55,7 @@ public class PlayerShould {
         Player player = new Player();
 
         //When
-        player.dealDamage(player);
+        player.dealDamage(new Damage(50), player);
         //Then
         assertEquals(1000, player.getHealth());
     }
@@ -60,7 +66,7 @@ public class PlayerShould {
         Player player = new Player();
         Player player2 = new Player();
         //When
-        player.dealDamage(player2);
+        player.dealDamage(new Damage(50), player2);
         //Then
         assertEquals(950, player2.getHealth());
     }
@@ -70,10 +76,10 @@ public class PlayerShould {
         //Given
         Player player = new Player();
         //When
-        player.setHealth(950);
-        player.heal(player);
+        player.receiveDamage(900);
+        player.heal(50, player);
         //Then
-        assertEquals(1000, player.getHealth());
+        assertEquals(150, player.getHealth());
     }
 
     @Test
@@ -82,8 +88,8 @@ public class PlayerShould {
         Player player = new Player();
         Player player2 = new Player();
         //When
-        player.dealDamage(player2);
-        player.heal(player2);
+        player.dealDamage(new Damage(50), player2);
+        player.heal(50, player2);
         //Then
         assertEquals(1000, player2.getHealth());
     }
@@ -95,9 +101,9 @@ public class PlayerShould {
         Player player = new Player();
         Player player2 = new Player();
         //When
-        player2.setHealth(950);
+        player2.receiveDamage(50);
         player.addEnemies(player2);
-        player.heal(player2);
+        player.heal(50, player2);
         //Then
         assertEquals(950, player2.getHealth());
     }
@@ -109,7 +115,7 @@ public class PlayerShould {
         Player player = new Player();
         Player player2 = new Player();
         //When
-        player.heal(player2);
+        player.heal(50, player2);
         //Then
         assertEquals(1000, player.getHealth());
     }
@@ -120,8 +126,8 @@ public class PlayerShould {
         Player player = new Player();
         Player player2 = new Player();
         //When
-        player.setHealth(0);
-        player2.heal(player);
+        player.receiveDamage(1000);
+        player2.heal(50, player);
         //Then
         assertEquals(0, player.getHealth());
     }
@@ -130,12 +136,12 @@ public class PlayerShould {
     public void drop_health_to_zero_on_higher_damage_than_health() {
         //Given
         Player player = new Player();
-        Player player2 = new Player();
+        Player enemy = new Player();
         //When
-        player2.setHealth(20);
-        player.dealDamage(player2);
+        enemy.receiveDamage(970);
+        player.dealDamage(new Damage(50), enemy);
         //Then
-        assertEquals(0, player2.getHealth());
+        assertEquals(0, enemy.getHealth());
 
     }
 
@@ -145,8 +151,8 @@ public class PlayerShould {
         Player player = new Player();
         Player player2 = new Player();
         //When
-        player2.setHealth(20);
-        player.dealDamage(player2);
+        player2.receiveDamage(970);
+        player.dealDamage(new Damage(50), player2);
         //Then
         assertFalse(player2.isAlive());
     }
@@ -156,9 +162,10 @@ public class PlayerShould {
         //Given
         Player player = new Player();
         Player player2 = new Player();
+        Attack damage= new Damage(50);
         //When
         player.setLevel(7);
-        player.dealDamage(player2);
+        player.dealDamage(new BoostDamage(50), player2);
         //Then
         assertEquals(925, player2.getHealth());
     }
@@ -170,9 +177,27 @@ public class PlayerShould {
         Player player2 = new Player();
         //When
         player2.setLevel(14);
-        player.dealDamage(player2);
+        player.dealDamage(new ReduceDamage(50), player2);
         //Then
         assertEquals(975, player2.getHealth());
+    }
+
+    @Test
+    public void have_range_of_2() {
+        //Given
+        Player meleeFighter = new MeleeFighter();
+
+        //Then
+        assertEquals(2, meleeFighter.getRange());
+    }
+
+    @Test
+    public void have_range_of_20() {
+        //Given
+        Player rangedFighter = new RangedFighter();
+
+        //Then
+        assertEquals(20, rangedFighter.getRange());
     }
 
 }
