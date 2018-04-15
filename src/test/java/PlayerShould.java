@@ -44,6 +44,17 @@ public class PlayerShould {
     }
 
     @Test
+    public void not_deal_damage_to_itself() {
+        //Given
+        Player player = new Player();
+
+        //When
+        player.dealDamage(player);
+        //Then
+        assertEquals(1000, player.getHealth());
+    }
+
+    @Test
     public void dealDamage() {
         //Given
         Player player = new Player();
@@ -52,6 +63,17 @@ public class PlayerShould {
         player.dealDamage(player2);
         //Then
         assertEquals(950, player2.getHealth());
+    }
+
+    @Test
+    public void heal_himself() {
+        //Given
+        Player player = new Player();
+        //When
+        player.setHealth(950);
+        player.heal(player);
+        //Then
+        assertEquals(1000, player.getHealth());
     }
 
     @Test
@@ -65,6 +87,21 @@ public class PlayerShould {
         //Then
         assertEquals(1000, player2.getHealth());
     }
+
+
+    @Test
+    public void not_heal_enemies() {
+        //Given
+        Player player = new Player();
+        Player player2 = new Player();
+        //When
+        player2.setHealth(950);
+        player.addEnemies(player2);
+        player.heal(player2);
+        //Then
+        assertEquals(950, player2.getHealth());
+    }
+
 
     @Test
     public void not_healed_over_1000() {
@@ -99,7 +136,43 @@ public class PlayerShould {
         player.dealDamage(player2);
         //Then
         assertEquals(0, player2.getHealth());
+
+    }
+
+    @Test
+    public void beDead_when_damage_higher_than_health() {
+        //Given
+        Player player = new Player();
+        Player player2 = new Player();
+        //When
+        player2.setHealth(20);
+        player.dealDamage(player2);
+        //Then
         assertFalse(player2.isAlive());
+    }
+
+    @Test
+    public void deal_50_more_damage_on_lower_level_target() {
+        //Given
+        Player player = new Player();
+        Player player2 = new Player();
+        //When
+        player.setLevel(7);
+        player.dealDamage(player2);
+        //Then
+        assertEquals(925, player2.getHealth());
+    }
+
+    @Test
+    public void deal_50_less_damage_on_higher_level_target() {
+        //Given
+        Player player = new Player();
+        Player player2 = new Player();
+        //When
+        player2.setLevel(14);
+        player.dealDamage(player2);
+        //Then
+        assertEquals(975, player2.getHealth());
     }
 
 }
