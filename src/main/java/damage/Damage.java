@@ -2,6 +2,7 @@ package damage;
 
 import player.Player;
 
+import static damage.DamageConstants.*;
 
 public class Damage implements Attack {
 

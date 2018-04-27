@@ -2,7 +2,7 @@ package damage;
 
 import player.Player;
 
-public class RangedDamage extends Damage implements Attack, RangedAttack{
+public class RangedDamage extends Damage implements Attack {
 
     public RangedDamage(int damage) {
         super(damage);
@@ -15,9 +15,7 @@ public class RangedDamage extends Damage implements Attack, RangedAttack{
         }
     }
 
-
-    @Override
-    public boolean isInRange(Player enemy) {
+    private boolean isInRange(Player enemy) {
         return enemy.getRange() < 20;
     }
 }

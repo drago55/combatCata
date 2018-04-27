@@ -12,10 +12,6 @@ public class Player implements Attackable {
     private boolean alive = true;
     private int level = 1;
     private Set<Player> enemies = new HashSet<>();
-
-    private static int baseHeal = 50;
-    private int baseDamage = 50;
-
     protected int range;
 
 
@@ -30,15 +26,13 @@ public class Player implements Attackable {
     }
 
     public void receiveDamage(int damage) {
-        if (isDamageHigherThanHealth(damage)){this.health=0;}
+        if (isDamageHigherThanHealth(damage)) {
+            this.health = 0;
+        }
     }
 
     private boolean isDamageHigherThanHealth(int damage) {
         return (this.health -= damage) < 0;
-    }
-
-    public void setAlive(boolean alive) {
-        this.alive = alive;
     }
 
     public int getLevel() {
@@ -60,30 +54,6 @@ public class Player implements Attackable {
         }
     }
 
-    private int doDamage(Player player) {
-
-        System.out.println("Level of a target " + player.getLevel());
-        System.out.println("Attackers level " + this.level);
-        int dmg = baseDamage;
-
-        int dif = this.level - player.getLevel();
-
-        if (dif > 0 && Math.abs(dif) >= 5) {
-            System.out.println("Attacker is stronger");
-            dmg += this.baseDamage * 0.5;
-            System.out.println("damage is " + dmg);
-        }
-        if (dif < 0 && Math.abs(dif) >= 5) {
-            System.out.println("Attacker is weaker");
-            dmg -= this.baseDamage * 0.5;
-            System.out.println("damage is " + dmg);
-        }
-
-        System.out.println("Difference between target and attacker " + dif);
-        return player.getHealth() - dmg < 0 ? 0 : player.getHealth() - dmg;
-    }
-
-
     public void heal(int healthPoints, Player player) {
         if (isAliveAndNotEnemy(player)) {
             player.setHealth(healthPoints);
@@ -97,7 +67,6 @@ public class Player implements Attackable {
     public void addEnemies(Player enemy) {
         enemies.add(enemy);
     }
-
 
     public int getRange() {
         return this.range;
